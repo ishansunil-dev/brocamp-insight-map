@@ -59,21 +59,29 @@ const ComplaintDetail = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute w-96 h-96 -top-48 -left-48 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div className="absolute w-96 h-96 -top-48 -right-48 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div className="absolute w-96 h-96 -bottom-48 left-1/2 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+      </div>
+
+      <div className="relative z-10">
       {/* Header */}
-      <header className="border-b bg-card">
+      <header className="border-b border-white/20 bg-white/10 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
-          <Button variant="ghost" onClick={() => navigate("/complaints")} className="gap-2 mb-2">
+          <Button variant="ghost" onClick={() => navigate("/complaints")} className="gap-2 mb-2 text-white hover:bg-white/10">
             <ArrowLeft className="h-4 w-4" />
             Back to Complaints
           </Button>
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-sm font-mono text-muted-foreground">{complaint.referenceId}</span>
+                <span className="text-sm font-mono text-white/80">{complaint.referenceId}</span>
                 <StatusBadge status={complaint.status} />
               </div>
-              <h1 className="text-2xl font-bold text-foreground">{complaint.title}</h1>
+              <h1 className="text-2xl font-bold text-white">{complaint.title}</h1>
             </div>
           </div>
         </div>
@@ -84,13 +92,13 @@ const ComplaintDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Details */}
           <div className="lg:col-span-2 space-y-6">
-            <Card className="p-6">
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20">
               <h2 className="text-lg font-semibold mb-4">Description</h2>
               <p className="text-foreground leading-relaxed">{complaint.description}</p>
             </Card>
 
             {/* Comments */}
-            <Card className="p-6">
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20">
               <div className="flex items-center gap-2 mb-6">
                 <MessageSquare className="h-5 w-5" />
                 <h2 className="text-lg font-semibold">Comments ({mockComments.length})</h2>
@@ -129,7 +137,7 @@ const ComplaintDetail = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <Card className="p-6">
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20">
               <h2 className="text-lg font-semibold mb-4">Details</h2>
               <div className="space-y-4">
                 <div>
@@ -166,6 +174,7 @@ const ComplaintDetail = () => {
           </div>
         </div>
       </main>
+      </div>
     </div>
   );
 };
