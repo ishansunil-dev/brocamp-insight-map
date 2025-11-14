@@ -4,11 +4,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/StatusBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { CategoryBadge } from "@/components/CategoryBadge";
-import { ArrowLeft, MessageSquare, Clock, User } from "lucide-react";
+import { CallRequestDialog } from "@/components/CallRequestDialog";
+import { ArrowLeft, MessageSquare, Clock, User, Phone, XCircle, CheckCircle } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
-import { useComplaint, useComplaintComments, useAddComment } from "@/hooks/useComplaints";
+import { useComplaint, useComplaintComments, useAddComment, useCallRequest, useCreateCallRequest, useCancelCallRequest } from "@/hooks/useComplaints";
 
 const ComplaintDetail = () => {
   const navigate = useNavigate();
@@ -17,7 +18,10 @@ const ComplaintDetail = () => {
   
   const { data: complaint, isLoading: complaintLoading } = useComplaint(id || "");
   const { data: comments = [], isLoading: commentsLoading } = useComplaintComments(id || "");
+  const { data: callRequest, isLoading: callRequestLoading } = useCallRequest(id || "");
   const addComment = useAddComment();
+  const createCallRequest = useCreateCallRequest();
+  const cancelCallRequest = useCancelCallRequest();
 
   const handleAddComment = () => {
     if (!comment.trim() || !id) return;
@@ -33,6 +37,20 @@ const ComplaintDetail = () => {
         },
       }
     );
+  };
+
+  const handleCallRequest = (notes: string, preferredTime?: string) => {
+    if (!id) return;
+    createCallRequest.mutate({
+      complaintId: id,
+      notes,
+      preferredTime,
+    });
+  };
+
+  const handleCancelCallRequest = () => {
+    if (!callRequest?.id) return;
+    cancelCallRequest.mutate(callRequest.id);
   };
 
   if (complaintLoading) {
@@ -175,6 +193,95 @@ const ComplaintDetail = () => {
                   </p>
                 </div>
               </div>
+            </Card>
+
+            {/* Call Request Card */}
+            <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Phone className="h-5 w-5" />
+                Call Request
+              </h2>
+              
+              {callRequestLoading ? (
+                <p className="text-sm text-muted-foreground">Loading...</p>
+              ) : callRequest ? (
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Status</p>
+                    <div className="flex items-center gap-2">
+                      {callRequest.status === "pending" && (
+                        <>
+                          <Clock className="h-4 w-4 text-yellow-600" />
+                          <span className="text-sm font-medium text-yellow-600">Pending</span>
+                        </>
+                      )}
+                      {callRequest.status === "scheduled" && (
+                        <>
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                          <span className="text-sm font-medium text-green-600">Scheduled</span>
+                        </>
+                      )}
+                      {callRequest.status === "completed" && (
+                        <>
+                          <CheckCircle className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm font-medium text-blue-600">Completed</span>
+                        </>
+                      )}
+                      {callRequest.status === "cancelled" && (
+                        <>
+                          <XCircle className="h-4 w-4 text-gray-600" />
+                          <span className="text-sm font-medium text-gray-600">Cancelled</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {callRequest.scheduled_time && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Scheduled Time</p>
+                      <p className="text-sm font-medium">
+                        {new Date(callRequest.scheduled_time).toLocaleString()}
+                      </p>
+                    </div>
+                  )}
+
+                  {callRequest.notes && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Your Notes</p>
+                      <p className="text-sm">{callRequest.notes}</p>
+                    </div>
+                  )}
+
+                  {callRequest.admin_notes && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Admin Notes</p>
+                      <p className="text-sm">{callRequest.admin_notes}</p>
+                    </div>
+                  )}
+
+                  {callRequest.status === "pending" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCancelCallRequest}
+                      disabled={cancelCallRequest.isPending}
+                      className="w-full border-red-300 text-red-700 hover:bg-red-50"
+                    >
+                      {cancelCallRequest.isPending ? "Cancelling..." : "Cancel Request"}
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Need to discuss this issue? Request a call from our admin team.
+                  </p>
+                  <CallRequestDialog
+                    onSubmit={handleCallRequest}
+                    isPending={createCallRequest.isPending}
+                  />
+                </div>
+              )}
             </Card>
           </div>
         </div>
