@@ -6,12 +6,12 @@ interface StatusBadgeProps {
 }
 
 const statusConfig = {
-  new: { label: "New", className: "bg-info/10 text-info border-info/20" },
-  in_review: { label: "In Review", className: "bg-warning/10 text-warning border-warning/20" },
-  in_progress: { label: "In Progress", className: "bg-primary/10 text-primary border-primary/20" },
-  resolved: { label: "Resolved", className: "bg-success/10 text-success border-success/20" },
+  new: { label: "New", className: "bg-neon/10 text-neon border-neon/30 shadow-[0_0_10px_rgba(0,229,255,0.2)]" },
+  in_review: { label: "In Review", className: "bg-muted text-foreground border-border" },
+  in_progress: { label: "In Progress", className: "bg-muted text-foreground border-border" },
+  resolved: { label: "Resolved", className: "bg-muted text-muted-foreground border-border" },
   closed: { label: "Closed", className: "bg-muted text-muted-foreground border-border" },
-  reopened: { label: "Reopened", className: "bg-destructive/10 text-destructive border-destructive/20" },
+  reopened: { label: "Reopened", className: "bg-muted text-destructive border-border" },
 };
 
 export const StatusBadge = ({ status, className }: StatusBadgeProps) => {
