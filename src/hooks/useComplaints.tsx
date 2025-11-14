@@ -28,6 +28,19 @@ export interface ComplaintComment {
   };
 }
 
+export interface CallRequest {
+  id: string;
+  complaint_id: string;
+  user_id: string;
+  status: "pending" | "scheduled" | "completed" | "cancelled";
+  preferred_time: string | null;
+  notes: string | null;
+  admin_notes: string | null;
+  scheduled_time: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export const useComplaints = () => {
   return useQuery({
     queryKey: ["complaints"],
@@ -179,6 +192,92 @@ export const useComplaintStats = () => {
       };
 
       return stats;
+    },
+  });
+};
+
+export const useCallRequest = (complaintId: string) => {
+  return useQuery({
+    queryKey: ["call-request", complaintId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("call_requests")
+        .select("*")
+        .eq("complaint_id", complaintId)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data as CallRequest | null;
+    },
+    enabled: !!complaintId,
+  });
+};
+
+export const useCreateCallRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      complaintId,
+      notes,
+      preferredTime,
+    }: {
+      complaintId: string;
+      notes?: string;
+      preferredTime?: string;
+    }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      const { data, error } = await supabase
+        .from("call_requests")
+        .insert({
+          complaint_id: complaintId,
+          user_id: user.id,
+          notes: notes || null,
+          preferred_time: preferredTime || null,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["call-request", variables.complaintId],
+      });
+      toast.success("Call request sent successfully!");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to send call request");
+    },
+  });
+};
+
+export const useCancelCallRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (callRequestId: string) => {
+      const { data, error } = await supabase
+        .from("call_requests")
+        .update({ status: "cancelled" })
+        .eq("id", callRequestId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["call-request", data.complaint_id],
+      });
+      toast.success("Call request cancelled");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to cancel call request");
     },
   });
 };
