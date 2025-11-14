@@ -23,23 +23,31 @@ const Complaints = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute w-96 h-96 -top-48 -left-48 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div className="absolute w-96 h-96 -top-48 -right-48 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div className="absolute w-96 h-96 -bottom-48 left-1/2 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+      </div>
+
+      <div className="relative z-10">
       {/* Header */}
-      <header className="border-b bg-card">
+      <header className="border-b border-white/20 bg-white/10 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
-          <Button variant="ghost" onClick={() => navigate("/")} className="gap-2 mb-2">
+          <Button variant="ghost" onClick={() => navigate("/")} className="gap-2 mb-2 text-white hover:bg-white/10">
             <ArrowLeft className="h-4 w-4" />
             Back
           </Button>
-          <h1 className="text-2xl font-bold text-foreground">All Complaints</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className="text-2xl font-bold text-white">All Complaints</h1>
+          <p className="text-sm text-white/80 mt-1">
             Browse and search through all reported issues
           </p>
         </div>
       </header>
 
       {/* Filters */}
-      <div className="border-b bg-card">
+      <div className="border-b border-white/20 bg-white/10 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
@@ -88,27 +96,29 @@ const Complaints = () => {
       {/* Complaints List */}
       <main className="container mx-auto px-4 py-8">
         <div className="mb-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white/80">
             Showing {filteredComplaints.length} of {mockComplaints.length} complaints
           </p>
         </div>
 
         {filteredComplaints.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12 bg-white/95 backdrop-blur-sm rounded-lg border border-white/20">
             <p className="text-muted-foreground">No complaints found matching your filters</p>
           </div>
         ) : (
           <div className="grid gap-4">
             {filteredComplaints.map((complaint) => (
-              <ComplaintCard
-                key={complaint.id}
-                complaint={complaint}
-                onClick={() => navigate(`/complaint/${complaint.id}`)}
-              />
+              <div key={complaint.id} className="bg-white/95 backdrop-blur-sm rounded-lg border border-white/20">
+                <ComplaintCard
+                  complaint={complaint}
+                  onClick={() => navigate(`/complaint/${complaint.id}`)}
+                />
+              </div>
             ))}
           </div>
         )}
       </main>
+      </div>
     </div>
   );
 };
