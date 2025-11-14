@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Home, BookOpen, Users, Settings, HelpCircle } from "lucide-react";
+import { Users, Shield, GraduationCap, Briefcase, UserCircle, HelpCircle } from "lucide-react";
 
 interface CategoryBadgeProps {
   category: string;
@@ -7,10 +7,11 @@ interface CategoryBadgeProps {
 }
 
 const categoryConfig = {
-  Hostel: { icon: Home, className: "bg-muted text-foreground border border-border" },
-  Class: { icon: BookOpen, className: "bg-muted text-foreground border border-border" },
   Mentor: { icon: Users, className: "bg-muted text-foreground border border-border" },
-  System: { icon: Settings, className: "bg-muted text-foreground border border-border" },
+  Admin: { icon: Shield, className: "bg-muted text-foreground border border-border" },
+  "Academic Counsellor": { icon: GraduationCap, className: "bg-muted text-foreground border border-border" },
+  "Working Hub": { icon: Briefcase, className: "bg-muted text-foreground border border-border" },
+  Peer: { icon: UserCircle, className: "bg-muted text-foreground border border-border" },
   Other: { icon: HelpCircle, className: "bg-muted text-foreground border border-border" },
 };
 
