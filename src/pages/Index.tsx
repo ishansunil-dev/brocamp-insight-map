@@ -2,11 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ComplaintCard } from "@/components/ComplaintCard";
 import { mockComplaints, mockStats } from "@/data/mockData";
-import { Plus, TrendingUp, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, LogOut, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const recentComplaints = mockComplaints.slice(0, 3);
 
   return (
@@ -19,10 +21,25 @@ const Index = () => {
               <h1 className="text-3xl font-bold text-foreground tracking-tight">Brocamp Complaints</h1>
               <p className="text-sm text-muted-foreground mt-1">Track and manage student concerns</p>
             </div>
-            <Button onClick={() => navigate("/submit")} size="lg" className="gap-2">
-              <Plus className="h-5 w-5" />
-              Submit Complaint
-            </Button>
+            <div className="flex items-center gap-3">
+              {user ? (
+                <>
+                  <Button onClick={() => navigate("/submit")} size="lg" className="gap-2">
+                    <Plus className="h-5 w-5" />
+                    Submit Complaint
+                  </Button>
+                  <Button onClick={signOut} variant="outline" size="lg" className="gap-2">
+                    <LogOut className="h-5 w-5" />
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <Button onClick={() => navigate("/auth")} size="lg" className="gap-2">
+                  <LogIn className="h-5 w-5" />
+                  Sign In
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </header>

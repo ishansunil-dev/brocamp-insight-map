@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import SubmitComplaint from "./pages/SubmitComplaint";
 import Complaints from "./pages/Complaints";
 import ComplaintDetail from "./pages/ComplaintDetail";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/submit" element={<SubmitComplaint />} />
           <Route path="/complaints" element={<Complaints />} />
           <Route path="/complaint/:id" element={<ComplaintDetail />} />
