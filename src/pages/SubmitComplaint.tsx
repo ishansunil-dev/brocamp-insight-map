@@ -1,0 +1,156 @@
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { ArrowLeft, Upload } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { categories } from "@/data/mockData";
+
+const SubmitComplaint = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [anonymous, setAnonymous] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      toast({
+        title: "Complaint submitted successfully",
+        description: "Your complaint has been registered with reference ID BRO-2025-0007",
+      });
+      setIsSubmitting(false);
+      navigate("/complaints");
+    }, 1000);
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-card">
+        <div className="container mx-auto px-4 py-4">
+          <Button variant="ghost" onClick={() => navigate("/")} className="gap-2 mb-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+          <h1 className="text-2xl font-bold text-foreground">Submit a Complaint</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Help us improve by reporting issues you're facing
+          </p>
+        </div>
+      </header>
+
+      {/* Form */}
+      <main className="container mx-auto px-4 py-8 max-w-3xl">
+        <Card className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="title">Complaint Title *</Label>
+              <Input
+                id="title"
+                placeholder="Brief description of the issue"
+                required
+                maxLength={100}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="category">Category *</Label>
+                <Select required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.name}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="priority">Priority *</Label>
+                <Select required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Detailed Description *</Label>
+              <Textarea
+                id="description"
+                placeholder="Provide as much detail as possible about the issue..."
+                required
+                rows={6}
+                maxLength={1000}
+              />
+              <p className="text-xs text-muted-foreground">Maximum 1000 characters</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="attachment">Attachments (Optional)</Label>
+              <div className="border-2 border-dashed rounded-lg p-6 text-center hover:border-primary/50 transition-colors cursor-pointer">
+                <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                <p className="text-sm text-muted-foreground">
+                  Click to upload or drag and drop
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  PNG, JPG, PDF up to 10MB
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+              <div className="space-y-0.5">
+                <Label htmlFor="anonymous" className="text-base">Submit Anonymously</Label>
+                <p className="text-sm text-muted-foreground">
+                  Your identity will not be disclosed
+                </p>
+              </div>
+              <Switch
+                id="anonymous"
+                checked={anonymous}
+                onCheckedChange={setAnonymous}
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate("/")}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting} className="flex-1">
+                {isSubmitting ? "Submitting..." : "Submit Complaint"}
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </main>
+    </div>
+  );
+};
+
+export default SubmitComplaint;
