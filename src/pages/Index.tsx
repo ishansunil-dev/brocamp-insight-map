@@ -12,12 +12,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4">
+      <header className="border-b bg-gradient-to-b from-background to-muted">
+        <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Brocamp Complaints</h1>
-              <p className="text-sm text-muted-foreground">Track and manage student concerns</p>
+              <h1 className="text-3xl font-bold text-foreground tracking-tight">Brocamp Complaints</h1>
+              <p className="text-sm text-muted-foreground mt-1">Track and manage student concerns</p>
             </div>
             <Button onClick={() => navigate("/submit")} size="lg" className="gap-2">
               <Plus className="h-5 w-5" />
@@ -31,43 +31,43 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="p-6">
+          <Card className="p-6 hover:border-neon hover:shadow-[0_0_15px_rgba(0,229,255,0.2)]">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Complaints</p>
-                <p className="text-3xl font-bold text-foreground mt-2">{mockStats.total}</p>
+                <p className="text-4xl font-bold text-foreground mt-2 [text-shadow:0_0_10px_rgba(0,229,255,0.3)]">{mockStats.total}</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-primary" />
+              <TrendingUp className="h-8 w-8 text-foreground" />
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 hover:border-neon hover:shadow-[0_0_15px_rgba(0,229,255,0.2)]">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">New</p>
-                <p className="text-3xl font-bold text-info mt-2">{mockStats.new}</p>
+                <p className="text-4xl font-bold text-neon mt-2 [text-shadow:0_0_15px_rgba(0,229,255,0.5)]">{mockStats.new}</p>
               </div>
-              <AlertCircle className="h-8 w-8 text-info" />
+              <AlertCircle className="h-8 w-8 text-neon" />
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 hover:border-neon hover:shadow-[0_0_15px_rgba(0,229,255,0.2)]">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">In Progress</p>
-                <p className="text-3xl font-bold text-warning mt-2">{mockStats.inProgress}</p>
+                <p className="text-4xl font-bold text-foreground mt-2 [text-shadow:0_0_10px_rgba(0,229,255,0.3)]">{mockStats.inProgress}</p>
               </div>
-              <Clock className="h-8 w-8 text-warning" />
+              <Clock className="h-8 w-8 text-foreground" />
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 hover:border-neon hover:shadow-[0_0_15px_rgba(0,229,255,0.2)]">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Resolved</p>
-                <p className="text-3xl font-bold text-success mt-2">{mockStats.resolved}</p>
+                <p className="text-4xl font-bold text-foreground mt-2 [text-shadow:0_0_10px_rgba(0,229,255,0.3)]">{mockStats.resolved}</p>
               </div>
-              <CheckCircle2 className="h-8 w-8 text-success" />
+              <CheckCircle2 className="h-8 w-8 text-foreground" />
             </div>
           </Card>
         </div>

@@ -22,13 +22,13 @@ interface ComplaintCardProps {
 export const ComplaintCard = ({ complaint, onClick }: ComplaintCardProps) => {
   return (
     <Card 
-      className="p-5 hover:shadow-md transition-all cursor-pointer border-border hover:border-primary/30"
+      className="p-5 hover:shadow-[0_0_20px_rgba(0,229,255,0.15)] transition-all duration-300 cursor-pointer border-border hover:border-neon"
       onClick={onClick}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-mono text-muted-foreground">{complaint.referenceId}</span>
+            <span className="text-sm font-mono text-neon [text-shadow:0_0_10px_rgba(0,229,255,0.5)]">{complaint.referenceId}</span>
             <StatusBadge status={complaint.status} />
           </div>
           

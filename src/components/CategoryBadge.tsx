@@ -7,11 +7,11 @@ interface CategoryBadgeProps {
 }
 
 const categoryConfig = {
-  Hostel: { icon: Home, className: "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400" },
-  Class: { icon: BookOpen, className: "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400" },
-  Mentor: { icon: Users, className: "bg-purple-50 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400" },
-  System: { icon: Settings, className: "bg-orange-50 text-orange-700 dark:bg-orange-950/30 dark:text-orange-400" },
-  Other: { icon: HelpCircle, className: "bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-400" },
+  Hostel: { icon: Home, className: "bg-muted text-foreground border border-border" },
+  Class: { icon: BookOpen, className: "bg-muted text-foreground border border-border" },
+  Mentor: { icon: Users, className: "bg-muted text-foreground border border-border" },
+  System: { icon: Settings, className: "bg-muted text-foreground border border-border" },
+  Other: { icon: HelpCircle, className: "bg-muted text-foreground border border-border" },
 };
 
 export const CategoryBadge = ({ category, className }: CategoryBadgeProps) => {

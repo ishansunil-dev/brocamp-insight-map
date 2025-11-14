@@ -14,7 +14,7 @@ const priorityConfig = {
   },
   medium: { 
     label: "Medium", 
-    className: "text-warning",
+    className: "text-foreground",
     icon: AlertCircle
   },
   high: { 
