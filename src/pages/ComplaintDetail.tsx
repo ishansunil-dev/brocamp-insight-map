@@ -29,7 +29,7 @@ const ComplaintDetail = () => {
     addComment.mutate(
       {
         complaintId: id,
-        message: comment,
+        comment: comment,
       },
       {
         onSuccess: () => {
@@ -138,7 +138,7 @@ const ComplaintDetail = () => {
                           {formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}
                         </span>
                       </div>
-                      <p className="text-sm text-foreground">{c.message}</p>
+                      <p className="text-sm text-foreground">{c.comment}</p>
                     </div>
                   ))
                 )}

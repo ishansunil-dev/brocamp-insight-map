@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { categories } from "@/data/mockData";
@@ -14,7 +14,19 @@ import { useCreateComplaint } from "@/hooks/useComplaints";
 const SubmitComplaint = () => {
   const navigate = useNavigate();
   const [anonymous, setAnonymous] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
   const createComplaint = useCreateComplaint();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setFiles(prev => [...prev, ...newFiles]);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,6 +38,7 @@ const SubmitComplaint = () => {
       category: formData.get("category") as string,
       priority: formData.get("priority") as string,
       anonymous,
+      files,
     };
 
     createComplaint.mutate(complaintData, {
@@ -119,11 +132,49 @@ const SubmitComplaint = () => {
 
             <div className="space-y-2">
               <Label htmlFor="attachment">Attachments (Optional)</Label>
-              <div className="border-2 border-dashed rounded-lg p-6 text-center text-muted-foreground">
-                <p className="text-sm">
-                  File upload feature coming soon
-                </p>
+              <div className="border-2 border-dashed rounded-lg p-6 text-center">
+                <input
+                  type="file"
+                  id="attachment"
+                  multiple
+                  accept="image/*,.pdf,.doc,.docx"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="attachment"
+                  className="cursor-pointer flex flex-col items-center gap-2"
+                >
+                  <Upload className="h-8 w-8 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    Click to upload files (max 10MB each)
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Images, PDF, DOC, DOCX supported
+                  </p>
+                </label>
               </div>
+              {files.length > 0 && (
+                <div className="space-y-2 mt-3">
+                  {files.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-2 bg-muted rounded-lg"
+                    >
+                      <span className="text-sm truncate flex-1">{file.name}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeFile(index)}
+                        className="h-6 w-6 p-0"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
