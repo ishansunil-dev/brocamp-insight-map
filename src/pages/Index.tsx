@@ -1,15 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ComplaintCard } from "@/components/ComplaintCard";
-import { mockComplaints, mockStats } from "@/data/mockData";
 import { Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, LogOut, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useComplaints, useComplaintStats } from "@/hooks/useComplaints";
 
 const Index = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  const recentComplaints = mockComplaints.slice(0, 3);
+  const { data: complaints = [], isLoading: complaintsLoading } = useComplaints();
+  const { data: stats, isLoading: statsLoading } = useComplaintStats();
+  
+  const recentComplaints = complaints.slice(0, 3);
+  const mockStats = stats || { total: 0, new: 0, inProgress: 0, resolved: 0 };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 relative overflow-hidden">
@@ -110,14 +114,24 @@ const Index = () => {
           </div>
 
           <div className="grid gap-4">
-            {recentComplaints.map((complaint) => (
-              <div key={complaint.id} className="bg-white/95 backdrop-blur-sm rounded-lg border border-white/20">
-                <ComplaintCard
-                  complaint={complaint}
-                  onClick={() => navigate(`/complaint/${complaint.id}`)}
-                />
+            {complaintsLoading ? (
+              <div className="text-center py-8 bg-white/95 backdrop-blur-sm rounded-lg border border-white/20">
+                <p className="text-muted-foreground">Loading complaints...</p>
               </div>
-            ))}
+            ) : recentComplaints.length === 0 ? (
+              <div className="text-center py-8 bg-white/95 backdrop-blur-sm rounded-lg border border-white/20">
+                <p className="text-muted-foreground">No complaints yet. Be the first to submit one!</p>
+              </div>
+            ) : (
+              recentComplaints.map((complaint) => (
+                <div key={complaint.id} className="bg-white/95 backdrop-blur-sm rounded-lg border border-white/20">
+                  <ComplaintCard
+                    complaint={complaint}
+                    onClick={() => navigate(`/complaint/${complaint.id}`)}
+                  />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </main>

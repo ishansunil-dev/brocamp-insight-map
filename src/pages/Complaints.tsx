@@ -2,20 +2,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ComplaintCard } from "@/components/ComplaintCard";
-import { mockComplaints } from "@/data/mockData";
 import { ArrowLeft, Search, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useComplaints } from "@/hooks/useComplaints";
 
 const Complaints = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const { data: complaints = [], isLoading } = useComplaints();
 
-  const filteredComplaints = mockComplaints.filter((complaint) => {
+  const filteredComplaints = complaints.filter((complaint) => {
     const matchesSearch = complaint.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         complaint.referenceId.toLowerCase().includes(searchQuery.toLowerCase());
+                         complaint.reference_id.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "all" || complaint.status === statusFilter;
     const matchesCategory = categoryFilter === "all" || complaint.category === categoryFilter;
     
@@ -97,11 +98,15 @@ const Complaints = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="mb-4">
           <p className="text-sm text-white/80">
-            Showing {filteredComplaints.length} of {mockComplaints.length} complaints
+            Showing {filteredComplaints.length} of {complaints.length} complaints
           </p>
         </div>
 
-        {filteredComplaints.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center py-12 bg-white/95 backdrop-blur-sm rounded-lg border border-white/20">
+            <p className="text-muted-foreground">Loading complaints...</p>
+          </div>
+        ) : filteredComplaints.length === 0 ? (
           <div className="text-center py-12 bg-white/95 backdrop-blur-sm rounded-lg border border-white/20">
             <p className="text-muted-foreground">No complaints found matching your filters</p>
           </div>

@@ -5,31 +5,34 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { categories } from "@/data/mockData";
+import { useCreateComplaint } from "@/hooks/useComplaints";
 
 const SubmitComplaint = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [anonymous, setAnonymous] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createComplaint = useCreateComplaint();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      toast({
-        title: "Complaint submitted successfully",
-        description: "Your complaint has been registered with reference ID BRO-2025-0007",
-      });
-      setIsSubmitting(false);
-      navigate("/complaints");
-    }, 1000);
+    const formData = new FormData(e.currentTarget);
+    const complaintData = {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      category: formData.get("category") as string,
+      priority: formData.get("priority") as string,
+      anonymous,
+    };
+
+    createComplaint.mutate(complaintData, {
+      onSuccess: (data) => {
+        navigate("/complaints");
+      },
+    });
   };
 
   return (
@@ -73,7 +76,7 @@ const SubmitComplaint = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="category">Category *</Label>
-                <Select required>
+                <Select name="category" required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
@@ -89,7 +92,7 @@ const SubmitComplaint = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="priority">Priority *</Label>
-                <Select required>
+                <Select name="priority" required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select priority" />
                   </SelectTrigger>
@@ -116,13 +119,9 @@ const SubmitComplaint = () => {
 
             <div className="space-y-2">
               <Label htmlFor="attachment">Attachments (Optional)</Label>
-              <div className="border-2 border-dashed rounded-lg p-6 text-center hover:border-primary/50 transition-colors cursor-pointer">
-                <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  PNG, JPG, PDF up to 10MB
+              <div className="border-2 border-dashed rounded-lg p-6 text-center text-muted-foreground">
+                <p className="text-sm">
+                  File upload feature coming soon
                 </p>
               </div>
             </div>
@@ -147,11 +146,12 @@ const SubmitComplaint = () => {
                 variant="outline"
                 onClick={() => navigate("/")}
                 className="flex-1"
+                disabled={createComplaint.isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting} className="flex-1">
-                {isSubmitting ? "Submitting..." : "Submit Complaint"}
+              <Button type="submit" disabled={createComplaint.isPending} className="flex-1">
+                {createComplaint.isPending ? "Submitting..." : "Submit Complaint"}
               </Button>
             </div>
           </form>

@@ -4,18 +4,10 @@ import { PriorityBadge } from "./PriorityBadge";
 import { CategoryBadge } from "./CategoryBadge";
 import { Clock, MessageSquare } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { Complaint } from "@/hooks/useComplaints";
 
 interface ComplaintCardProps {
-  complaint: {
-    id: string;
-    referenceId: string;
-    title: string;
-    category: string;
-    priority: string;
-    status: string;
-    createdAt: string;
-    commentCount?: number;
-  };
+  complaint: Complaint;
   onClick?: () => void;
 }
 
@@ -28,7 +20,7 @@ export const ComplaintCard = ({ complaint, onClick }: ComplaintCardProps) => {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-mono text-neon [text-shadow:0_0_10px_rgba(0,229,255,0.5)]">{complaint.referenceId}</span>
+            <span className="text-sm font-mono text-neon [text-shadow:0_0_10px_rgba(0,229,255,0.5)]">{complaint.reference_id}</span>
             <StatusBadge status={complaint.status} />
           </div>
           
@@ -44,14 +36,8 @@ export const ComplaintCard = ({ complaint, onClick }: ComplaintCardProps) => {
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
-              {formatDistanceToNow(new Date(complaint.createdAt), { addSuffix: true })}
+              {formatDistanceToNow(new Date(complaint.created_at), { addSuffix: true })}
             </div>
-            {complaint.commentCount !== undefined && (
-              <div className="flex items-center gap-1">
-                <MessageSquare className="h-4 w-4" />
-                {complaint.commentCount} comments
-              </div>
-            )}
           </div>
         </div>
       </div>
