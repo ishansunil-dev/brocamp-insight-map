@@ -37,14 +37,14 @@ const Auth = () => {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const studentId = formData.get("studentId") as string;
+    const userId = formData.get("userId") as string;
     const password = formData.get("password") as string;
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
     const role = formData.get("role") as string;
 
-    // Create email from student ID
-    const email = `${studentId}@student.brocamp.com`;
+    // Create email from user ID (convert spaces to underscores and lowercase)
+    const email = `${userId.replace(/\s+/g, '_').toLowerCase()}@brocamp.com`;
 
     try {
       const { error, data } = await supabase.auth.signUp({
@@ -56,18 +56,18 @@ const Auth = () => {
             name,
             phone,
             role,
-            student_id: studentId,
+            user_id: userId,
           },
         },
       });
 
       if (error) throw error;
 
-      // Update profile with student_id
+      // Update profile with user_id (stored in student_id field)
       if (data.user) {
         await supabase
           .from('profiles')
-          .update({ student_id: studentId })
+          .update({ student_id: userId })
           .eq('id', data.user.id);
       }
 
@@ -85,14 +85,15 @@ const Auth = () => {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const studentId = formData.get("studentId") as string;
+    const userId = formData.get("userId") as string;
     const password = formData.get("password") as string;
+    const role = formData.get("role") as string;
 
     try {
-      // Get email from student_id
+      // Get email from user_id and verify role
       const { data: result, error: fnError } = await supabase.rpc(
         'authenticate_with_student_id',
-        { _student_id: studentId, _password: password }
+        { _student_id: userId, _password: password, _role: role }
       );
 
       if (fnError) throw fnError;
@@ -160,12 +161,12 @@ const Auth = () => {
             <TabsContent value="signin" className="space-y-4 mt-6">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signin-studentId" className="text-gray-700 font-medium">Student ID</Label>
+                  <Label htmlFor="signin-userId" className="text-gray-700 font-medium">ID</Label>
                   <Input
-                    id="signin-studentId"
-                    name="studentId"
+                    id="signin-userId"
+                    name="userId"
                     type="text"
-                    placeholder="Enter your student ID"
+                    placeholder="e.g., Ishan Sunil"
                     className="border-gray-300 focus:border-violet-500 focus:ring-violet-500"
                     required
                   />
@@ -180,6 +181,25 @@ const Auth = () => {
                     className="border-gray-300 focus:border-violet-500 focus:ring-violet-500"
                     required
                   />
+                </div>
+                <div className="space-y-3">
+                  <Label className="text-gray-700 font-medium">Sign in as</Label>
+                  <RadioGroup name="role" defaultValue="student" required className="space-y-3">
+                    <div className="flex items-center space-x-3 p-3 rounded-lg border-2 border-gray-200 hover:border-purple-400 transition-colors cursor-pointer">
+                      <RadioGroupItem value="student" id="signin-student" className="border-purple-500" />
+                      <Label htmlFor="signin-student" className="font-normal cursor-pointer flex items-center gap-2 flex-1">
+                        <GraduationCap className="h-5 w-5 text-purple-600" />
+                        <span className="text-gray-700">Student</span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-3 p-3 rounded-lg border-2 border-gray-200 hover:border-violet-400 transition-colors cursor-pointer">
+                      <RadioGroupItem value="admin" id="signin-admin" className="border-violet-500" />
+                      <Label htmlFor="signin-admin" className="font-normal cursor-pointer flex items-center gap-2 flex-1">
+                        <Shield className="h-5 w-5 text-violet-600" />
+                        <span className="text-gray-700">Admin</span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
                 </div>
                 <Button 
                   type="submit" 
@@ -205,12 +225,12 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-gray-700 font-medium">Student ID</Label>
+                  <Label htmlFor="signup-userId" className="text-gray-700 font-medium">ID</Label>
                   <Input
-                    id="signup-studentId"
-                    name="studentId"
+                    id="signup-userId"
+                    name="userId"
                     type="text"
-                    placeholder="Enter your student ID"
+                    placeholder="e.g., Ishan Sunil"
                     className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                     required
                   />
