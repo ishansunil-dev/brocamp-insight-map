@@ -147,18 +147,21 @@ export type Database = {
           id: string
           name: string
           phone: string | null
+          student_id: string | null
         }
         Insert: {
           created_at?: string
           id: string
           name: string
           phone?: string | null
+          student_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
           phone?: string | null
+          student_id?: string | null
         }
         Relationships: []
       }
@@ -188,6 +191,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      authenticate_with_student_id: {
+        Args: { _password: string; _student_id: string }
+        Returns: Json
+      }
       generate_reference_id: { Args: never; Returns: string }
       has_role: {
         Args: {

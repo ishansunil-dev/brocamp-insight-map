@@ -37,14 +37,17 @@ const Auth = () => {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
+    const studentId = formData.get("studentId") as string;
     const password = formData.get("password") as string;
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
     const role = formData.get("role") as string;
 
+    // Create email from student ID
+    const email = `${studentId}@student.brocamp.com`;
+
     try {
-      const { error } = await supabase.auth.signUp({
+      const { error, data } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -53,11 +56,20 @@ const Auth = () => {
             name,
             phone,
             role,
+            student_id: studentId,
           },
         },
       });
 
       if (error) throw error;
+
+      // Update profile with student_id
+      if (data.user) {
+        await supabase
+          .from('profiles')
+          .update({ student_id: studentId })
+          .eq('id', data.user.id);
+      }
 
       toast.success("Account created successfully!");
       navigate("/");
@@ -73,12 +85,26 @@ const Auth = () => {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
+    const studentId = formData.get("studentId") as string;
     const password = formData.get("password") as string;
 
     try {
+      // Get email from student_id
+      const { data: result, error: fnError } = await supabase.rpc(
+        'authenticate_with_student_id',
+        { _student_id: studentId, _password: password }
+      );
+
+      if (fnError) throw fnError;
+      
+      const resultData = result as any;
+      if (resultData.error) {
+        throw new Error(resultData.error);
+      }
+
+      // Sign in with email
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: resultData.email,
         password,
       });
 
@@ -134,12 +160,12 @@ const Auth = () => {
             <TabsContent value="signin" className="space-y-4 mt-6">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signin-email" className="text-gray-700 font-medium">Email</Label>
+                  <Label htmlFor="signin-studentId" className="text-gray-700 font-medium">Student ID</Label>
                   <Input
-                    id="signin-email"
-                    name="email"
-                    type="email"
-                    placeholder="your.email@example.com"
+                    id="signin-studentId"
+                    name="studentId"
+                    type="text"
+                    placeholder="Enter your student ID"
                     className="border-gray-300 focus:border-violet-500 focus:ring-violet-500"
                     required
                   />
@@ -179,12 +205,12 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-gray-700 font-medium">Email</Label>
+                  <Label htmlFor="signup-email" className="text-gray-700 font-medium">Student ID</Label>
                   <Input
-                    id="signup-email"
-                    name="email"
-                    type="email"
-                    placeholder="your.email@example.com"
+                    id="signup-studentId"
+                    name="studentId"
+                    type="text"
+                    placeholder="Enter your student ID"
                     className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                     required
                   />

@@ -80,6 +80,7 @@ const SubmitComplaint = () => {
               <Label htmlFor="title">Complaint Title *</Label>
               <Input
                 id="title"
+                name="title"
                 placeholder="Brief description of the issue"
                 required
                 maxLength={100}
@@ -122,6 +123,7 @@ const SubmitComplaint = () => {
               <Label htmlFor="description">Detailed Description *</Label>
               <Textarea
                 id="description"
+                name="description"
                 placeholder="Provide as much detail as possible about the issue..."
                 required
                 rows={6}
