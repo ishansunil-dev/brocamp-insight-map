@@ -28,43 +28,43 @@ const Index = () => {
       
       <div className="relative z-10">
       {/* Header */}
-      <header className="border-b border-white/20 bg-white/10 backdrop-blur-sm">
+      <header className="border-b border-white/20 bg-white/10 backdrop-blur-sm sticky top-0 z-50 shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="animate-fade-in">
               <h1 className="text-3xl font-bold text-white tracking-tight">Brocamp Complaints</h1>
               <p className="text-sm text-white/80 mt-1">Track and manage student concerns</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: "0.2s" }}>
               {user ? (
                 <>
-                  <Button onClick={() => navigate("/submit")} size="lg" className="gap-2 bg-white text-purple-600 hover:bg-white/90">
+                  <Button onClick={() => navigate("/submit")} size="lg" className="gap-2 bg-white text-purple-600 hover:bg-white/90 hover:scale-105 transition-transform shadow-lg">
                     <Plus className="h-5 w-5" />
                     Submit Complaint
                   </Button>
                   {userRole === "admin" && (
                     <>
-                      <Button onClick={() => navigate("/admin")} variant="outline" size="lg" className="gap-2 border-white/30 text-white hover:bg-white/10">
+                      <Button onClick={() => navigate("/admin")} variant="outline" size="lg" className="gap-2 border-white text-white hover:bg-white/20 bg-white/10 hover:scale-105 transition-transform shadow-lg backdrop-blur-sm">
                         <LayoutDashboard className="h-5 w-5" />
                         Admin Dashboard
                       </Button>
-                      <Button onClick={() => navigate("/analytics")} variant="outline" size="lg" className="gap-2 border-white/30 text-white hover:bg-white/10">
+                      <Button onClick={() => navigate("/analytics")} variant="outline" size="lg" className="gap-2 border-white text-white hover:bg-white/20 bg-white/10 hover:scale-105 transition-transform shadow-lg backdrop-blur-sm">
                         <BarChart3 className="h-5 w-5" />
                         Analytics
                       </Button>
                     </>
                   )}
-                  <Button onClick={() => navigate("/profile")} variant="outline" size="lg" className="gap-2 border-white/30 text-white hover:bg-white/10">
+                  <Button onClick={() => navigate("/profile")} variant="outline" size="lg" className="gap-2 border-white text-white hover:bg-white/20 bg-white/10 hover:scale-105 transition-transform shadow-lg backdrop-blur-sm">
                     <UserCircle className="h-5 w-5" />
                     Profile
                   </Button>
-                  <Button onClick={signOut} variant="outline" size="lg" className="gap-2 border-white/30 text-white hover:bg-white/10">
+                  <Button onClick={signOut} variant="outline" size="lg" className="gap-2 border-white text-white hover:bg-white/20 bg-white/10 hover:scale-105 transition-transform shadow-lg backdrop-blur-sm">
                     <LogOut className="h-5 w-5" />
                     Sign Out
                   </Button>
                 </>
               ) : (
-                <Button onClick={() => navigate("/auth")} size="lg" className="gap-2 bg-white text-purple-600 hover:bg-white/90">
+                <Button onClick={() => navigate("/auth")} size="lg" className="gap-2 bg-white text-purple-600 hover:bg-white/90 hover:scale-105 transition-transform shadow-lg">
                   <LogIn className="h-5 w-5" />
                   Sign In
                 </Button>
