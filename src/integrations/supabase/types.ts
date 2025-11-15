@@ -191,10 +191,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      authenticate_with_student_id: {
-        Args: { _password: string; _student_id: string }
-        Returns: Json
-      }
+      authenticate_with_student_id:
+        | {
+            Args: {
+              _password: string
+              _role: Database["public"]["Enums"]["app_role"]
+              _student_id: string
+            }
+            Returns: Json
+          }
+        | { Args: { _password: string; _student_id: string }; Returns: Json }
       generate_reference_id: { Args: never; Returns: string }
       has_role: {
         Args: {
