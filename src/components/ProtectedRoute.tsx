@@ -19,6 +19,11 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
       setLoading(false);
+      
+      // Redirect to landing page after sign out
+      if (event === 'SIGNED_OUT') {
+        window.location.href = '/landing';
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -33,7 +38,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/landing" replace />;
   }
 
   return <>{children}</>;

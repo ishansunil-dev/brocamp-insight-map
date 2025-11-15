@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StatusBadge } from "@/components/StatusBadge";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { CategoryBadge } from "@/components/CategoryBadge";
@@ -10,6 +11,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
 import { useComplaint, useComplaintComments, useAddComment, useCallRequest, useCreateCallRequest, useCancelCallRequest } from "@/hooks/useComplaints";
+import { useUpdateComplaintStatus } from "@/hooks/useUpdateComplaintStatus";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const ComplaintDetail = () => {
   const navigate = useNavigate();
@@ -19,9 +22,11 @@ const ComplaintDetail = () => {
   const { data: complaint, isLoading: complaintLoading } = useComplaint(id || "");
   const { data: comments = [], isLoading: commentsLoading } = useComplaintComments(id || "");
   const { data: callRequest, isLoading: callRequestLoading } = useCallRequest(id || "");
+  const { data: userRole } = useUserRole();
   const addComment = useAddComment();
   const createCallRequest = useCreateCallRequest();
   const cancelCallRequest = useCancelCallRequest();
+  const updateStatus = useUpdateComplaintStatus();
 
   const handleAddComment = () => {
     if (!comment.trim() || !id) return;
@@ -51,6 +56,11 @@ const ComplaintDetail = () => {
   const handleCancelCallRequest = () => {
     if (!callRequest?.id) return;
     cancelCallRequest.mutate(callRequest.id);
+  };
+
+  const handleStatusChange = (newStatus: string) => {
+    if (!id) return;
+    updateStatus.mutate({ complaintId: id, status: newStatus });
   };
 
   if (complaintLoading) {
@@ -194,6 +204,23 @@ const ComplaintDetail = () => {
                 </div>
               </div>
             </Card>
+
+            {/* Admin Status Update */}
+            {userRole === "admin" && (
+              <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20">
+                <h2 className="text-lg font-semibold mb-4">Update Status</h2>
+                <Select value={complaint.status} onValueChange={handleStatusChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="new">New</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="resolved">Resolved</SelectItem>
+                  </SelectContent>
+                </Select>
+              </Card>
+            )}
 
             {/* Call Request Card */}
             <Card className="p-6 bg-white/95 backdrop-blur-sm border-white/20">

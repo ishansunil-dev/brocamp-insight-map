@@ -1,16 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ComplaintCard } from "@/components/ComplaintCard";
-import { Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, LogOut, LogIn, UserCircle } from "lucide-react";
+import { Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, LogOut, LogIn, UserCircle, LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useComplaints, useComplaintStats } from "@/hooks/useComplaints";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const Index = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { data: complaints = [], isLoading: complaintsLoading } = useComplaints();
   const { data: stats, isLoading: statsLoading } = useComplaintStats();
+  const { data: userRole } = useUserRole();
   
   const recentComplaints = complaints.slice(0, 3);
   const mockStats = stats || { total: 0, new: 0, inProgress: 0, resolved: 0 };
@@ -40,6 +42,12 @@ const Index = () => {
                     <Plus className="h-5 w-5" />
                     Submit Complaint
                   </Button>
+                  {userRole === "admin" && (
+                    <Button onClick={() => navigate("/admin")} variant="outline" size="lg" className="gap-2 border-white/30 text-white hover:bg-white/10">
+                      <LayoutDashboard className="h-5 w-5" />
+                      Admin Dashboard
+                    </Button>
+                  )}
                   <Button onClick={() => navigate("/profile")} variant="outline" size="lg" className="gap-2 border-white/30 text-white hover:bg-white/10">
                     <UserCircle className="h-5 w-5" />
                     Profile
