@@ -9,6 +9,7 @@ import SubmitComplaint from "./pages/SubmitComplaint";
 import Complaints from "./pages/Complaints";
 import ComplaintDetail from "./pages/ComplaintDetail";
 import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/submit" element={<ProtectedRoute><SubmitComplaint /></ProtectedRoute>} />
           <Route path="/complaints" element={<ProtectedRoute><Complaints /></ProtectedRoute>} />
           <Route path="/complaint/:id" element={<ProtectedRoute><ComplaintDetail /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

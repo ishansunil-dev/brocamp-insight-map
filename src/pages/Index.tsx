@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ComplaintCard } from "@/components/ComplaintCard";
-import { Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, LogOut, LogIn } from "lucide-react";
+import { Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, LogOut, LogIn, UserCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useComplaints, useComplaintStats } from "@/hooks/useComplaints";
@@ -39,6 +39,10 @@ const Index = () => {
                   <Button onClick={() => navigate("/submit")} size="lg" className="gap-2 bg-white text-purple-600 hover:bg-white/90">
                     <Plus className="h-5 w-5" />
                     Submit Complaint
+                  </Button>
+                  <Button onClick={() => navigate("/profile")} variant="outline" size="lg" className="gap-2 border-white/30 text-white hover:bg-white/10">
+                    <UserCircle className="h-5 w-5" />
+                    Profile
                   </Button>
                   <Button onClick={signOut} variant="outline" size="lg" className="gap-2 border-white/30 text-white hover:bg-white/10">
                     <LogOut className="h-5 w-5" />
