@@ -192,6 +192,7 @@ export type Database = {
     }
     Functions: {
       authenticate_with_student_id:
+        | { Args: { _password: string; _student_id: string }; Returns: Json }
         | {
             Args: {
               _password: string
@@ -200,7 +201,6 @@ export type Database = {
             }
             Returns: Json
           }
-        | { Args: { _password: string; _student_id: string }; Returns: Json }
       generate_reference_id: { Args: never; Returns: string }
       has_role: {
         Args: {

@@ -36,9 +36,12 @@ export default function Landing() {
       {/* Content */}
       <div className="relative z-10 text-center space-y-8 px-4">
         <div className="space-y-4">
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tight animate-fade-in">
-            <span className="bg-gradient-to-r from-white via-pink-200 to-purple-200 bg-clip-text text-transparent animate-scale-in [text-shadow:0_0_30px_rgba(255,255,255,0.5)]">
-              BROCAMP
+        <h1 className="text-6xl md:text-8xl font-bold tracking-tight animate-fade-in flex items-center justify-center gap-0">
+            <span className="bg-white text-black px-4 py-2 rounded-lg shadow-2xl animate-scale-in">
+              BRO
+            </span>
+            <span className="text-white animate-scale-in [text-shadow:0_0_30px_rgba(255,255,255,0.5)]" style={{ animationDelay: "0.15s" }}>
+              CAMP
             </span>
           </h1>
           <h2 className="text-4xl md:text-6xl font-semibold text-white animate-fade-in [text-shadow:0_0_20px_rgba(255,255,255,0.3)]" style={{ animationDelay: "0.3s" }}>
